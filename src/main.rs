@@ -38,6 +38,9 @@ fn parse_request_line(s: &mut BufReader<TcpStream>) -> Result<RequestLine> {
     assert_eq!(r, &"\r\n");
 
     let mut xs = init.split(' ');
+    dbg!(xs.nth(0));
+    dbg!(xs.nth(1));
+    dbg!(xs.nth(2));
     let method = match xs.nth(0) {
         Some(m) => match m.to_lowercase().as_ref() {
             "get" => Ok(Method::Get),
