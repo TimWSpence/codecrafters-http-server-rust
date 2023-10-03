@@ -19,7 +19,6 @@ fn main() {
                 println!("accepted new connection");
                 let mut rx = BufReader::new(tx.try_clone().unwrap());
                 let req_line = parse_request_line(&mut rx).unwrap();
-                dbg!(&req_line.path);
                 match req_line.path.as_ref() {
                     "/" => tx.write_all(b"HTTP/1.1 200 OK\r\n\r\n").unwrap(),
                     _ => tx.write_all(b"HTTP/1.1 404 Not Found\r\n\r\n").unwrap(),
@@ -35,7 +34,7 @@ fn main() {
 fn parse_request_line(s: &mut BufReader<TcpStream>) -> Result<RequestLine> {
     let mut buf = String::new();
     s.read_line(&mut buf)?;
-    let (init, r) = &buf.split_at(buf.len() - 3);
+    let (init, r) = &buf.split_at(buf.len() - 2);
     assert_eq!(r, &"\r\n");
 
     let xs = init.to_lowercase();
