@@ -21,6 +21,14 @@ fn main() {
                 dbg!(&req_line.path);
                 match req_line.path.as_ref() {
                     "/" => tx.write_all(b"HTTP/1.1 200 OK\r\n\r\n").unwrap(),
+                    p if p.starts_with("/echo/") => {
+                        let data = p.strip_prefix("/echo/").unwrap();
+                        tx.write_all(b"HTTP/1.1 200 OK\r\n").unwrap();
+                        tx.write_all(b"Content-Type: text/plain\r\n").unwrap();
+                        tx.write_all(b"Content-Length: 3\r\n").unwrap();
+                        tx.write_all(b"\r\n").unwrap();
+                        tx.write_all(data.as_bytes()).unwrap();
+                    }
                     _ => tx.write_all(b"HTTP/1.1 404 Not Found\r\n\r\n").unwrap(),
                 }
             }
