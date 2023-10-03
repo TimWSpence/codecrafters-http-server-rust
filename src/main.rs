@@ -34,8 +34,8 @@ fn main() {
 fn parse_request_line(s: &mut BufReader<TcpStream>) -> Result<RequestLine> {
     let mut buf = String::new();
     s.read_line(&mut buf)?;
-    let (init, r) = &buf.split_at(buf.len() - 1);
-    assert_eq!(r, &"\r");
+    let (init, r) = &buf.split_at(buf.len() - 2);
+    assert_eq!(r, &"\r\n");
     match init.to_lowercase() {
         x if x.starts_with("get ") => Ok(RequestLine {
             method: Method::Get,
