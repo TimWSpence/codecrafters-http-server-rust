@@ -3,7 +3,6 @@ use std::io::BufRead;
 use std::io::BufReader;
 use std::io::Write;
 use std::net::{TcpListener, TcpStream};
-use std::str::Split;
 
 fn main() {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -19,6 +18,7 @@ fn main() {
                 println!("accepted new connection");
                 let mut rx = BufReader::new(tx.try_clone().unwrap());
                 let req_line = parse_request_line(&mut rx).unwrap();
+                dbg!(&req_line.path);
                 match req_line.path.as_ref() {
                     "/" => tx.write_all(b"HTTP/1.1 200 OK\r\n\r\n").unwrap(),
                     _ => tx.write_all(b"HTTP/1.1 404 Not Found\r\n\r\n").unwrap(),
