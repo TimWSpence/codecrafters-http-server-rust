@@ -37,10 +37,9 @@ fn parse_request_line(s: &mut BufReader<TcpStream>) -> Result<RequestLine> {
     let (init, r) = &buf.split_at(buf.len() - 2);
     assert_eq!(r, &"\r\n");
 
-    let xs = init.to_lowercase();
-    let mut xs = xs.split(' ');
+    let mut xs = init.split(' ');
     let method = match xs.nth(0) {
-        Some(m) => match m {
+        Some(m) => match m.to_lowercase().as_ref() {
             "get" => Ok(Method::Get),
             _ => Err(anyhow!("{m} is not a valid method")),
         },
